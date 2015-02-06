@@ -35,6 +35,7 @@ public class TrySSL {
         boolean trustAllHostnames = false;
         try {
             CommandLine cl = clParser.parse(clOpts, args);
+            args = cl.getArgs();
             trustAllCerts = !cl.hasOption("C");
             trustAllHostnames = !cl.hasOption("H");
             if (cl.hasOption("h")) {
@@ -43,6 +44,12 @@ public class TrySSL {
             }
         } catch (ParseException pe) {
             System.err.println(pe.getMessage());
+            printHelp(clOpts);
+            System.exit(1);
+        }
+
+        if (args.length != 1) {
+            System.err.println("no url specified");
             printHelp(clOpts);
             System.exit(1);
         }
@@ -75,6 +82,7 @@ public class TrySSL {
             };
             HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         }
+
 
         // Establish the connection
         URLConnection urlConn = new URL(args[0]).openConnection();
